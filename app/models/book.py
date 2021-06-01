@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional, List
 
-from pydantic import constr
+from pydantic import constr, validator
 
 from app.models.core import IDModelMixin, CoreModel, DateTimeModelMixin
 
@@ -25,6 +25,11 @@ class BookCreate(BookBase):
 
 class BookUpdate(BookBase):
     authors: Optional[List[str]]
+
+    @validator("title", pre=True)
+    def prevent_none(cls, v):
+        assert v is not None, "Title may not be None"
+        return v
 
 
 class BookInDB(IDModelMixin, DateTimeModelMixin, BookBase):

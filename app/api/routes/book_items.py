@@ -40,6 +40,7 @@ async def update_book_item_by_id(
         BookItemStatus.written_off,
     }:
         book_item_update.status = book_item.status
+
     return await books_items_repo.update_book_item(book_item=book_item, book_item_update=book_item_update)
 
 

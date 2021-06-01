@@ -7,7 +7,7 @@ GET_SYSTEM_CONFIG_QUERY = """
     FROM system_config;
 """
 
-UPDATE_LENDING_BY_ID_QUERY = """
+UPDATE_SYSTEM_CONFIG_QUERY = """
     UPDATE system_config
     SET reservation_due_day = :reservation_due_day,
         lending_due_day = :lending_due_day,
@@ -23,6 +23,6 @@ class SystemConfigRepository(BaseRepository):
 
     async def update_config(self, system_config_update: SystemConfigUpdate) -> SystemConfigInDB:
         updated_system_config_record = await self.db.fetch_one(
-            query=GET_SYSTEM_CONFIG_QUERY, values=system_config_update.dict()
+            query=UPDATE_SYSTEM_CONFIG_QUERY, values=system_config_update.dict()
         )
         return SystemConfigInDB(**updated_system_config_record)

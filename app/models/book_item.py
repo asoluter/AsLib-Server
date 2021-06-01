@@ -1,6 +1,8 @@
 from typing import Optional, List
 from enum import Enum
 
+from pydantic import validator
+
 from app.models.core import IDModelMixin, CoreModel, DateTimeModelMixin
 
 
@@ -40,7 +42,10 @@ class BookItemCreate(BookItemBase):
 
 
 class BookItemInternalUpdate(BookItemBase):
-    pass
+    @validator("barcode", "condition", "status", pre=True)
+    def prevent_none(cls, v):
+        assert v is not None, "Barcode, condition and status may not be None"
+        return v
 
 
 class BookItemUpdate(BookItemInternalUpdate):

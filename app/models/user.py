@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional, List
-from pydantic import EmailStr, constr
+from pydantic import EmailStr, constr, validator
 
 from app.models.core import DateTimeModelMixin, IDModelMixin, CoreModel
 from app.services import security
@@ -44,10 +44,20 @@ class UserCreate(CoreModel):
     status: Optional[UserStatus] = UserStatus.active
     library_card_number: Optional[constr(min_length=7, max_length=14, regex="^[0-9]+$")]
 
+    @validator("*", pre=True)
+    def prevent_none(cls, v):
+        assert v is not None, "User data is not nullable"
+        return v
+
 
 class CurrentUserUpdate(CoreModel):
     email: Optional[EmailStr]
     password: Optional[constr(min_length=7, max_length=100)]
+
+    @validator("*", pre=True)
+    def prevent_none(cls, v):
+        assert v is not None, "User data is not nullable"
+        return v
 
 
 class UserUpdate(CurrentUserUpdate):
@@ -56,6 +66,11 @@ class UserUpdate(CurrentUserUpdate):
     role: Optional[UserRole]
     status: Optional[UserStatus]
     library_card_number: Optional[constr(min_length=7, max_length=14, regex="^[0-9]+$")]
+
+    @validator("*", pre=True)
+    def prevent_none(cls, v):
+        assert v is not None, "User data is not nullable"
+        return v
 
 
 class UserPasswordUpdate(CoreModel):
